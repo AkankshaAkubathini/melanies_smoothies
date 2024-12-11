@@ -1,7 +1,7 @@
 # Import python packages
 import streamlit as st
 from snowflake.snowpark.functions import col
-
+import requests
 # Write directly to the app
 st.title(":cup_with_straw: Customize your Smoothie! :cup_with_straw:")
 st.write(
@@ -18,7 +18,7 @@ my_dataframe = session.table("smoothies.public.fruit_options").select(col('FRUIT
 #st.dataframe(data=my_dataframe, use_container_width=True)
 #st.stop()
 
-import requests
+
 # Convert the Snowpark Dataframe to a Pandas Dataframe so we can use the LOC function
 pd_df = my_dataframe.to_pandas()
 # st.dataframe(pd_df)
@@ -36,10 +36,6 @@ if ingredients_list:
         search_on = pd_df.loc[pd_df['FRUIT_NAME'] == fruit_chosen, 'SEARCH_ON'].iloc[0]
         #st.write('The search value for ', fruit_chosen, ' is ', search_on, '.')
         st.subheader(fruit_chosen + ' Nutrition Information')
-
-        try:
-            fruityvice_response = requests.get("https://fruityvice.com/api/fruit/" + search_on)
-            fruityvice_response.raise_for_status()  # Raise an exception for error HTTP statuses
-            fv_df = st.dataframe(data=fruityvice_response.json(), use_container_width=True)
-        except requests.exceptions.RequestException as e:
-            st.error(f"An error occurred while fetching fruit data: {e}")
+        fruityvice_response = requests.get("https://fruityvice.com/api/fruit/" + search_on)
+        fv_df = st.dataframe(data=fruityvice_response.json(), use_container_width=True)
+       
