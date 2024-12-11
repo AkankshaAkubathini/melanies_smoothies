@@ -24,6 +24,7 @@ ingredients_list = st.multiselect(
 import requests
 # Convert the Snowpark Dataframe to a Pandas Dataframe so we can use the LOC function
 pd_df = my_dataframe.to_pandas()
+print(pd_df.columns)
 # st.dataframe(pd_df)
 # st.stop()
 
